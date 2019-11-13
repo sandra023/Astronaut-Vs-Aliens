@@ -1,0 +1,376 @@
+body {
+    margin: 0;
+    background-color: black;
+    font-family: 'Press Start 2P', cursive;
+}
+#mazeContainer {
+    background-image: url('../GameAssets/gameboyScreenLarge.png');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    text-align: center;
+    position: relative;
+    height: 100vh;
+    margin: 0 auto;
+    /* animation: spin 4s infinite linear; */
+}
+/* @keyframes spin {
+	0%  {-webkit-transform: rotate(0deg);}
+	100% {-webkit-transform: rotate(360deg);}	
+} */
+.boardContainer {
+    height: 105vh;
+    background-image: url('../GameAssets/spaceBackground.jpg');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.infoBoard {
+    margin-left: auto;
+    margin-right: auto;
+    height: 12%;
+    font-family: 'Press Start 2P', cursive;
+    border: 5px solid black;
+    background-color: black;
+    vertical-align: middle;
+    color: blue
+}
+.maze {
+    font-size: 0;
+    display: inline-block;
+    border: 5px solid black;
+    margin-top: 13.9vh;    
+}
+h4 {
+    margin: 0 auto;
+    font-size: 100%
+}
+
+#energy {
+    margin: 6%
+}
+#lives {
+    margin: 6%
+}
+
+.column {
+    float: left;
+    height: 4vmax;
+    padding-top: .5%;
+    width: 20%
+  }
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+.columnB {
+    display: inline-block;
+    width: 33.3%;
+    width: 3.5vmax;
+    height: 3.5vmax;
+    margin: 10px
+  }
+#right {
+    width: 25%
+}
+#middle {
+    width: 25%
+}
+#left {
+    width: 25%
+}
+#level {
+    width: 25%
+}
+.square {
+    height: 4.7vh
+}
+.maze div {
+    width:  5.23vh;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    background-color: black;
+}
+.wall {
+    background-image: url('../GameAssets/tile2.png');
+    background-size: contain;
+}
+.insideWall {
+    background-image: url('../GameAssets/tileMetal2.png');
+    background-size: contain;
+}
+.coin {
+    background-image: url('../GameAssets/coinSmall.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.blastFireRight {
+    background-image: url('../GameAssets/blastFire.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+.blastFireLeft {
+    background-image: url('../GameAssets/blastFireLeft.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+}
+.enemyDies {
+    background-image: url('../GameAssets/enemyDies.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.ship {
+    background-image: url('../GameAssets/bluePortal.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+.spaceManRight {
+    background-image: url('../GameAssets/spaceWalkRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.spaceShootRight {
+    background-image: url('../GameAssets/spaceShootRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.spaceManLeft {
+    background-image: url('../GameAssets/spaceWalkLeft.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.spaceShootLeft {
+    background-image: url('../GameAssets/spaceShootLeft.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.alien {
+    background-image: url('../GameAssets/alien.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien1 {
+    background-image: url('../GameAssets/alienMedium.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien2 {
+    background-image: url('../GameAssets/alienMedium.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien3 {
+    background-image: url('../GameAssets/alien.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien4 {
+    background-image: url('../GameAssets/alien.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien5 {
+    background-image: url('../GameAssets/robotWalkingRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien6 {
+    background-image: url('../GameAssets/robotWalkingRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.alien7 {
+    background-image: url('../GameAssets/robotWalkingRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.item2 {
+    background-image: url('../GameAssets/portalKey.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.screwdriver12 {
+    background-image: url('../GameAssets/.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.screwdriver13 {
+    background-image: url('../GameAssets/doctor13screwdriver.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.item1 {
+    background-image: url('../GameAssets/energyCapsule.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.companion {
+    background-image: url('../GameAssets/dalek2.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.firstDiv {
+    height: 5%;
+}
+.highScoreBoard {
+    background-color: black;
+    position: relative;
+    width: 60%;
+    height: 80%;
+    margin: 0 auto;
+    border: 5px solid red;
+}
+
+.nameRegister {
+    font-size: 1.5em;
+}
+.highScore, .nameRegister {
+    color: rgb(252, 0, 34);
+    text-align: center;
+    padding: 5px; 
+    margin: 0 auto
+}
+.nameRegisteredSpot {
+    padding-top: 1.5%;
+    height: 4vh;
+    color: rgb(74, 244, 250);
+    text-align: center;
+}
+
+.highScore {
+    margin-top: 1.5%;
+}
+.playerScore {
+    color: white;
+    text-align: center;
+    padding: 10px 
+}
+.columnC {
+    height: 2vmax;
+    margin: 0 auto
+}
+#name, #nameEnter {
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    color: rgb(74, 244, 250);
+}
+#name {
+    display:inline-block;
+    text-align: right;
+    width: 42%;
+}
+#nameEnter {
+    display:inline-block;
+    text-align: left;
+    text-decoration: underline;
+    width: 40%;
+    padding: 0 0 0 10px;
+}
+.row1 {
+    display:inline-block;
+    width: 10%;
+    height: 100%;
+    text-decoration: underline
+}
+.alphabet {
+    text-align: center;
+    width: 50%;
+    display: inline-block;
+    margin: 0 25% 0 
+}
+.letter {
+    width: 8%;
+    font-size: 1.25em;
+    padding: 8px;
+    color: greenyellow;
+    display: inline-block;
+    cursor: pointer;
+}
+.letter:hover { 
+    background-color: re;
+  }
+.nameRegistered {
+    color: rgb(74, 244, 250);
+    text-align: center;
+}
+.playerNameTable {
+ height: 30%;
+ margin: 0% 20% 0 20%
+}
+.rank {
+    font-size: 1.25em;c
+    text-align: center;
+    width: 20%;
+    display: inline-block
+}
+.rank1, .rank2 , .rank3, .score1, .score2, .score3, .name1, .name2, .name3 {
+    color: rgb(252, 0, 34);
+}
+.rank4, .rank5, .score4, .score5, .name4, .name5 {
+    color:  yellow;
+}
+.score {
+    font-size: 1.25em;
+    width: 20%;
+    display: inline-block;
+    text-align: center
+}
+.playerName {
+    font-size: 1.25em;
+    display: inline-block
+}
+.playerRow {
+    padding: 1.5%
+    
+}
+@media screen and (max-width: 600px) {
+    body {
+        font-size: .8em;
+    }
+}
+.player5 {
+    padding-bottom: 6%
+}
+
+.replayButton{
+    font-size: 1.25em;
+    color: rgb(252, 0, 34);
+    border: 5px solid red;
+    text-align: center;
+    cursor: pointer;
+    background-color: black;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5%;
+    width: fit-content;
+}
