@@ -126,6 +126,7 @@ const player = {
     errorPortalPhrase: "Your missing the energy to power the portal!",
     shootingDirection: '',
     killCount: 0,
+    squaresMoved: 0,
     
     
     render(){
@@ -141,25 +142,32 @@ const player = {
         grabSquare(this.x,this.y).addClass(`${this.className}${this.movingDirection}`)
     },
     move(){
-        if (this.alive)
-        {
-        if(this.direction=== "left" && grabSquare(this.x-1,this.y).is('.path, .ship')){
-            this.x--;
-        } else if (this.direction === "right" && grabSquare(this.x+1,this.y).is('.path, .ship')){
-            this.x++;
-            this.checkWin()
-        } else  if (this.direction=== "up" && grabSquare(this.x,this.y+1).is('.path, .ship')){
-            this.y++;
-        } else if (this.direction === "down" && grabSquare(this.x,this.y-1).is('.path, .ship')){
-            this.y--
-        }
-        this.render();
+        if (this.alive && this.squaresMoved === 0){
+            console.log('squares.moved', this.squaresMoved)
+            if(this.direction=== "left" && grabSquare(this.x-1,this.y).is('.path, .ship')){
+                this.x--;
+                this.direction = null
+            } else if (this.direction === "right" && grabSquare(this.x+1,this.y).is('.path, .ship')){
+                this.x++;
+                this.checkWin()
+                this.direction = null
 
-        setTimeout(()=>{
-            this.move();
-            this.gatherItems()
-        },250)
+            } else  if (this.direction=== "up" && grabSquare(this.x,this.y+1).is('.path, .ship')){
+                this.y++;
+                this.direction = null
+
+            } else if (this.direction === "down" && grabSquare(this.x,this.y-1).is('.path, .ship')){
+                this.y--
+                this.direction = null
+            }
+            this.render();
+
+            setTimeout(()=>{
+                this.move();
+                this.gatherItems()
+            },10)
         }
+        this.squaresMoved = 0
     },
     gatherItems(){
         let square = grabSquare(this.x,this.y)
