@@ -39,7 +39,7 @@ body {
     font-size: 0;
     display: inline-block;
     border: 5px solid black;
-    margin-top: 13.9vh;    
+    margin-top: 12.5vh;    
 }
 h4 {
     margin: 0 auto;
@@ -81,11 +81,15 @@ h4 {
 #left {
     width: 25%
 }
-#level {
-    width: 25%
+/* #level {
+width: 25% 
 }
+*/
 .square {
     height: 4.7vh
+}
+p {
+    margin-top: 8%;
 }
 .maze div {
     width:  5.23vh;
