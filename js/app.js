@@ -48,7 +48,7 @@ function buildInfoBoard(){
     const fifthDiv = $('<div class=column id=fifthDiv>')
 
     const levelH4 = $('<h4 id=level>').text('Level')
-    const energyH4 = $('<h4 id=energyCoins>').text('Energy Coins')
+    const pointsH4 = $('<h4 id=pointsCounter>').text('Energy Coins')
     const itemsH4 = $('<h4 id=items>').text('Items Found')
     const livesH4 =$('<h4 id=livesCount>').text('Lives')
     const killCountH4 = $('<h4 id=killCount>').text("Enemy Kills")
@@ -58,15 +58,15 @@ function buildInfoBoard(){
     const third = $('<div class=column>').addClass('third')
     
     const kills = $('<p id=kills>').text(0)
-    const energy = $('<p id=energy>').text(0)
+    const points = $('<p id=points>').text(0)
     const levelNumber = $('<p id=levelNumber>').text(1)
     const lives = $('<p id=lives>').text(3)
     $(infoDiv).append(firstDiv, secondDiv, thirdDiv, fourthDiv, fifthDiv)
     $(firstDiv).append(levelH4)
     $(levelH4).append(levelNumber)
 
-    $(secondDiv).append(energyH4)
-    $(energyH4).append(energy)
+    $(secondDiv).append(pointsH4)
+    $(pointsH4).append(points)
 
     $(thirdDiv).append(itemsH4, first, second, third)
 
@@ -112,38 +112,34 @@ function grabSquare(x,y){
 
 const player = {
     level: 1,
-    energy: 0,
+    points: 0,
     x:0,
     y:9,
     lives: 3,
     direction: null,
     itemsFound: 0,
     alive: true,
-    className: 'spaceMan',
+    className: 'spaceManGun',
     // item: 'item1',
     movingDirection: 'Right',
     exitPhrase: "You've reached the portal!",
     errorPortalPhrase: "Your missing the energy to power the portal!",
     shootingDirection: '',
     killCount: 0,
-    squaresMoved: 0,
     
     
     render(){
-        $(`.${this.className}Left`).removeClass('item1')
-        $(`.${this.className}Right`).removeClass('item1')
-        $(`.${this.className}Right`).removeClass('item2')
-        $(`.${this.className}Left`).removeClass('item2')
-        $(`.${this.className}Left`).removeClass('coin')
-        $(`.${this.className}Right`).removeClass('coin')
+        console.log('this.movDirection ', this.movingDirection)
+        $(`.${this.className}${this.movingDirection}`).removeClass('item1')
+        $(`.${this.className}${this.movingDirection}`).removeClass('item2')
+        $(`.${this.className}${this.movingDirection}`).removeClass('coin')
         $(`.${this.className}Right`).removeClass(`${this.className}Right`)
         $(`.${this.className}Left`).removeClass(`${this.className}Left`)
 
         grabSquare(this.x,this.y).addClass(`${this.className}${this.movingDirection}`)
     },
     move(){
-        if (this.alive && this.squaresMoved === 0){
-            console.log('squares.moved', this.squaresMoved)
+        if (this.alive){
             if(this.direction=== "left" && grabSquare(this.x-1,this.y).is('.path, .ship')){
                 this.x--;
                 this.direction = null
@@ -172,51 +168,45 @@ const player = {
     gatherItems(){
         let square = grabSquare(this.x,this.y)
         if (square.hasClass('coin')){
-            this.energy++
-            $('#energy').text(this.energy)
+            this.points++
+            $('#points').text(this.points)
         } else if (square.hasClass('item1')){
             $('.first').addClass('item1')
             this.itemsFound++
-            this.energy += 10
+            this.points += 10
         } else if (square.hasClass('item2')){
             $('.second').addClass('item2')
-            renderShip()
+            if(this.level === 1){
+                let levelOnePortal = new Item(11,1,'ship path')
+            } else {
+                let levelTwoPortal = new Item(14,1,'ship path')
+
+            }
             this.itemsFound++
-            this.energy+=15
+            this.points+=15
         }
     },
     shoot() {
         x = this.x
         y= this.y
-        if (grabSquare(x,y).is('.spaceManLeft')) {      
-            player.shootLeft()
+        this.direction = null
+        if (grabSquare(x,y).is('.spaceManGunLeft')) {      
+            this.shootingDirection = 'Left'
+            let BlastFireLeft = new BlastFire(this.x, this.y,"blastFireLeft",175)
         }
-        if (grabSquare(x,y).is('.spaceManRight')) {
-            player.shootRight()
+        if (grabSquare(x,y).is('.spaceManGunRight')) {
+            this.shootingDirection = 'Right'
+            let BlastFireRight = new BlastFire(this.x,this.y,"blastFireRight",175)
         }
-    },
-    shootLeft(){
-        player.direction = null
-        $('.spaceManLeft').addClass('spaceShootLeft')
-        $('.spaceShootLeft').removeClass('spaceManLeft')                    
+        $(`.${this.className}${this.shootingDirection}`).addClass(`spaceShoot${this.shootingDirection}`)
+        $(`.spaceShoot${this.shootingDirection}`).removeClass(`${this.className}${this.shootingDirection}`)                    
+       
         setTimeout(()=>{
-            $('.spaceShootLeft').addClass('spaceManLeft')    
-            $('.spaceShootLeft').removeClass('spaceShootLeft')
+            console.log("timeout hit")
+            $(`.spaceShoot${this.shootingDirection}`).addClass(`${this.className}${this.shootingDirection}`)    
+            $(`.spaceShoot${this.shootingDirection}`).removeClass(`spaceShoot${this.shootingDirection}`)
+       
         },500)
-        player.shootingDirection = 'left'
-        let BlastFireLeft = new BlastFire(this.x, this.y,"blastFireLeft",175)
-    },
-    shootRight () {
-        player.direction = null
-        $('.spaceManRight').addClass('spaceShootRight')
-        $('.spaceShootRight').removeClass('spaceManRight')
-        setTimeout(()=>{
-            $('.spaceShootRight').addClass('spaceManRight')
-            $('.spaceManRight').removeClass('spaceShootRight')
-        },500)        
-        player.shootingDirection = 'right'
-        let BlastFireRight = new BlastFire(this.x,this.y,"blastFireRight",175)
-        
     },
     playerDies (){
         $(`.${this.className}${this.movingDirection}`).removeClass(`${this.className}${this.movingDirection}`);
@@ -228,7 +218,7 @@ const player = {
         if (this.level === 1){
             this.x = 0
             this.y = 9
-        } if (this.level === 2){
+        } else if (this.level === 2){
             this.x = 0
             this.y = 12
         }
@@ -330,7 +320,7 @@ class BlastFire {
     }
 
     blastMoves(){
-        if (player.shootingDirection === 'left'){
+        if (player.shootingDirection === 'Left'){
             if (grabSquare(this.x-1,this.y).is('.insideWall, .wall')) {
                 this.destroy()
             }
@@ -343,9 +333,8 @@ class BlastFire {
                 this.x--;
                 this.render();
             }
- 
             
-        } else if (player.shootingDirection === 'right'){
+        } else if (player.shootingDirection === 'Right'){
             if (grabSquare(this.x+1,this.y).is('.insideWall, .wall')) {
                 this.destroy()
             }
@@ -386,6 +375,10 @@ class Enemy{
         grabSquare(this.x,this.y).addClass(this.image)
         grabSquare(this.x,this.y).addClass('enemy')
 
+        // if (grabSquare(this.x,this.y).is('item1, item2, item3, item4')){
+        //     grabSquare(this.x,this.y).removeClass('item1 item2 item3 item4')
+
+        // }
     }
     checkDeath (){
         if (grabSquare(this.x,this.y).hasClass('enemyHit')){
@@ -394,6 +387,8 @@ class Enemy{
             this.destroy();
             $('.enemyHit').removeClass('enemyHit')
             player.killCount++
+            player.points += 10
+            $('#points').text(player.points)
             $('#kills').text(player.killCount)
 
         }
@@ -456,25 +451,15 @@ class Item {
         this.image = image;
         this.render();
     }
+    remove(){
+        grabSquare(this.x,this.y).removeClass(this.image)
+    }
     render(){
         grabSquare(this.x,this.y).removeClass('coin')
         grabSquare(this.x,this.y).addClass(this.image)
     }
 }
 
-renderShip = () => {
-    if(player.level === 1 ){
-        x = 11,
-        y = 1,
-        grabSquare(x,y).removeClass('wall')
-        grabSquare(x,y).addClass('ship')
-    } else if (player.level === 2){
-        x = 14,
-        y = 1,
-        grabSquare(x,y).removeClass('wall')
-        grabSquare(x,y).addClass('ship')
-    }
-}
 levelOneItemsAndEnemies = () => {
     let Item1Level1 = new Item(1,1,'item1')
     let Item2Level1 = new Item(10,10, 'item2')    
@@ -500,7 +485,7 @@ reset = () => {
     gameBoard = gameBoardLevelOne,
     player.lives = 3
     player.level = 1
-    player.energy = 0
+    player.points = 0
     player.direction =  null,
     player.movingDirection = 'Right'
     player.itemsFound = 0
@@ -572,7 +557,7 @@ function endGame(){
         enemies[i].destroy();
         enemies[i].removeEnemy();
     }
-    playerScore = player.energy
+    playerScore = player.points
     player.level = 1
     $('body').empty()
 }

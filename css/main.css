@@ -135,7 +135,18 @@ h4 {
     background-position: center;
 
 }
-.spaceManRight {
+.spaceGun {
+    background-image: url('../GameAssets/     .gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.spaceManNoGunRight {
+    background-image: url('../GameAssets/spaceRightNoGun.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.spaceManGunRight {
     background-image: url('../GameAssets/spaceWalkRight.gif');
     background-size: contain;
     background-repeat: no-repeat;
@@ -145,7 +156,13 @@ h4 {
     background-size: contain;
     background-repeat: no-repeat;
 }
-.spaceManLeft {
+
+.spaceManNoGunLeft {
+    background-image: url('../GameAssets/spaceLeftNoGun.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.spaceManGunLeft {
     background-image: url('../GameAssets/spaceWalkLeft.gif');
     background-size: contain;
     background-repeat: no-repeat;
@@ -155,6 +172,7 @@ h4 {
     background-size: contain;
     background-repeat: no-repeat;
 }
+
 .alien {
     background-image: url('../GameAssets/alien.gif');
     background-size: contain;
@@ -205,18 +223,6 @@ h4 {
 }
 .item2 {
     background-image: url('../GameAssets/portalKey.gif');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.screwdriver12 {
-    background-image: url('../GameAssets/.gif');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.screwdriver13 {
-    background-image: url('../GameAssets/doctor13screwdriver.gif');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
