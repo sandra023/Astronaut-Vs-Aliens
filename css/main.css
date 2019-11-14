@@ -135,12 +135,12 @@ h4 {
     background-position: center;
 
 }
-.spaceGun {
+/* .spaceGun {
     background-image: url('../GameAssets/     .gif');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-}
+} */
 .spaceManNoGunRight {
     background-image: url('../GameAssets/spaceRightNoGun.gif');
     background-size: contain;
@@ -228,7 +228,7 @@ h4 {
     background-position: center;
 }
 .item1 {
-    background-image: url('../GameAssets/energyCapsule.png');
+    background-image: url('../GameAssets/pixelGun.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
