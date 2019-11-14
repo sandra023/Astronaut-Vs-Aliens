@@ -47,28 +47,40 @@ class GameLevel {
         const thirdDiv = $('<div class=column id=thirdDiv>')
         const fourthDiv = $('<div class=column id=fourthDiv>')
         const fifthDiv = $('<div class=column id=fifthDiv>')
+        
         const levelH4 = $('<h4 id=level>').text('Level')
         const pointsH4 = $('<h4 id=pointsCounter>').text('Energy Coins')
         const itemsH4 = $('<h4 id=items>').text('Items Found')
         const livesH4 =$('<h4 id=livesCount>').text('Lives')
         const killCountH4 = $('<h4 id=killCount>').text("Enemy Kills")
+        
         const first = $('<div class=columnB>').addClass('first')
         const second = $('<div class=columnB>').addClass('second')
-        const third = $('<div class=column>').addClass('third')
+        const third = $('<div class=columnB>').addClass('third')
+        
+        const firstLife = $('<div class=columnB>').addClass('life3 life')
+        const secondLife = $('<div class=columnB>').addClass('life2 life')
+        const thirdLife = $('<div class=columnB>').addClass('life1 life')
+
         const kills = $('<p id=kills>').text(0)
         const points = $('<p id=points>').text(0)
         const levelNumber = $('<p id=levelNumber>').text(1)
-        const lives = $('<p id=lives>').text(3)
+        // const lives = $('<p id=lives>').text(3)
         $(infoDiv).append(firstDiv, secondDiv, thirdDiv, fourthDiv, fifthDiv)
+        
         $(firstDiv).append(levelH4)
         $(levelH4).append(levelNumber)
+        
         $(secondDiv).append(pointsH4)
         $(pointsH4).append(points)
+        
         $(thirdDiv).append(itemsH4, first, second, third)
+        
         $(fourthDiv).append(killCountH4)
         $(killCountH4).append(kills)
-        $(fifthDiv).append(livesH4)
-        $(livesH4).append(lives)
+        
+        $(fifthDiv).append(livesH4,firstLife, secondLife, thirdLife)
+        // $(livesH4).append(firstLife, secondLife, thirdLife)
         
         const mazeDiv = $('<div>').addClass('maze')
         $('#mazeContainer').append(mazeDiv)
@@ -242,6 +254,7 @@ class Player {
     playerDies (){
         $(`.${this.className}${this.movingDirection}`).removeClass(`${this.className}${this.movingDirection}`);
         this.alive = false;
+        $(`.life${this.lives}`).removeClass('life')
         this.lives--
         this.direction = null
         $('#lives').text(this.lives)

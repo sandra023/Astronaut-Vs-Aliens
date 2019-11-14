@@ -141,6 +141,7 @@ h4 {
     background-repeat: no-repeat;
     background-position: center;
 } */
+
 .spaceManNoGunRight {
     background-image: url('../GameAssets/spaceRightNoGun.gif');
     background-size: contain;
@@ -217,6 +218,12 @@ h4 {
 }
 .alien7 {
     background-image: url('../GameAssets/robotWalkingRight.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.life {
+    background-image: url('../GameAssets/astronautLivesImage.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
