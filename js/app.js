@@ -8,7 +8,7 @@ const gameBoardLevelOne = [
     [0,1,1,1,3,1,1,3,1,1,1,0],
     [0,1,3,1,1,3,3,1,1,3,1,0],
     [0,1,3,3,1,1,1,1,3,3,1,0],
-    [1,1,3,1,1,0,0,1,1,3,1,0],
+    [0,1,3,1,1,0,0,1,1,3,1,0],
     [0,1,1,1,0,0,0,0,1,1,1,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
 ]
@@ -26,7 +26,7 @@ const gameBoardLevelTwo = [
     [0,1,0,1,1,1,1,0,1,1,1,1,0,1,0],
     [0,1,1,1,0,0,1,1,1,0,0,1,1,1,0],
     [0,1,0,1,1,1,1,0,1,1,1,1,0,1,0],
-    [1,1,0,0,1,0,1,0,1,0,1,0,0,1,0],
+    [0,1,0,0,1,0,1,0,1,0,1,0,0,1,0],
     [0,1,1,1,1,0,1,1,1,0,1,1,1,1,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ]
@@ -36,6 +36,31 @@ class GameLevel {
     constructor(gameBoardLevel){
         this.gameBoard = gameBoardLevel
         this.square;   
+    }
+    levelOneGameAssets= () => {
+        let Item1Level1 = new Item(1,1,'item1')
+        // let Item1Level1 = new Item(1,8, 'item1')    // test gun
+        let Item2Level1 = new Item(10,10, 'item2')  
+        // let Item2Level1 = new Item(1,10, 'item2')    // test portal key
+        let Enemy1 = new Enemy(6,4,"alien1",500);
+        let Enemy2 = new Enemy(5,6,"alien1",500);
+        let Enemy3 = new Enemy(5,4,"alien1",500);
+        let Enemy4 = new Enemy(6,6,"alien1",500);
+    }
+    levelTwoItemsAndEnemies = () => {
+        let Item2Level2 = new Item (13,13, 'item2')
+        let Item3Level2 = new Item(1,1,'item3')
+        let Enemy6 = new Enemy(8,7,"alien1",500);
+        let Enemy7 = new Enemy(7,7,"alien2",500);
+        let Enemy8 = new Enemy(6,7,"alien3",500);
+        let Enemy9 = new Enemy(7,8,"alien4",500);
+        let Enemy10 = new Enemy(7,6,"alien5",500);
+        let Enemy11 = new Enemy(3,3,"alien6",500);
+        let Enemy12 = new Enemy(11,11,"alien7",500)
+        if(player.hasGun === false){
+            let Item1Level2 = new Item(7,7,"item1")
+        }
+
     }
     buildInfoBoard(){
         const mazeContainer = $('<div id=mazeContainer>')
@@ -104,39 +129,58 @@ class GameLevel {
             }
         }
     }
-    levelOneGameAssets= () => {
-        let Item1Level1 = new Item(1,1,'item1')
-        let Item2Level1 = new Item(10,10, 'item2')    
-        let Enemy1 = new Enemy(6,4,"alien1",500);
-        let Enemy2 = new Enemy(5,6,"alien1",500);
-        let Enemy3 = new Enemy(5,4,"alien1",500);
-        let Enemy4 = new Enemy(6,6,"alien1",500);
-    }
-    levelTwoItemsAndEnemies = () => {
-        let Item1Level1 = new Item(1,1,'item1')
-        let Item2Level2 = new Item (13,13, 'item2')
-        let Enemy6 = new Enemy(8,7,"alien1",500);
-        let Enemy7 = new Enemy(7,7,"alien2",500);
-        let Enemy8 = new Enemy(6,7,"alien3",500);
-        let Enemy9 = new Enemy(7,8,"alien4",500);
-        let Enemy10 = new Enemy(7,6,"alien5",500);
-        let Enemy11 = new Enemy(3,3,"alien6",500);
-        let Enemy12 = new Enemy(11,11,"alien7",500)
-    }
+ 
     buildPage(){
         this.buildInfoBoard()
         this.generateMaze()
         this.levelOneGameAssets()
+        $('body').on('keydown', function(e){
+            // console.log(typeof e.which);
+            switch(e.which){
+                case 37:
+                if(player.movingDirection === 'Right'){
+                    player.previousDirection = "Right"
+                }
+                player.direction = "Left";
+                player.movingDirection = 'Left'
+                break;
+                case 39:
+                if(player.movingDirection === 'Left'){
+                    player.previousDirection = "Left"
+                }
+                player.direction ="Right";
+                player.movingDirection = 'Right'
+                break;
+                case 38:
+                player.direction ="down";
+                break;
+                case 40:
+                player.direction = "up"
+                break;
+                case 32:
+                    if(player.shooting === true){
+                        setTimeout(()=> {
+                            player.shooting = true
+                            player.direction = null;
+                            player.shoot()
+                        },350)
+                    }  
+                player.shooting = true
+                player.direction = null;
+                player.shoot()
+                }
+        })
     }
+    
 }
 
-function grabSquare(x,y){
+function grabSquare (x,y){
     return $(`.square[x="${x}"][y="${y}"]`)
 }
 
 class Player {
 
-    constructor(x,y,className,classNameGun){
+    constructor(x,y,className,classNameGun,shootName){
         this.gameBoard = gameBoardLevelOne
         this.points = 0
         this.lives = 3
@@ -148,61 +192,73 @@ class Player {
         this.alive = true
         this.hasGun = false
         this.movingDirection = 'Right'
-        this.shootingDirection = ''
-        this.previousDirection = 'right'
+        this.shootingDirection = 'Right'
+        this.previousDirection = 'Right'
         this.exitPhrase = "You've reached the portal!"
         // this.errorPortalPhrase = "Your missing the energy to power the portal!"
+        this.shooting = false
+        this.pathClasses = '.path, .ship, .enemy'
         this.className = className
         this.classNameGun = classNameGun // maybe could probably just use variable  `{this.className}NoGun${this.movingDirection}`
-
+        this.classNameNoGun = className
+        this.shootName = shootName
+        this.lostGun = null
     }
     render(){
-        // console.log('this.movDirection ', this.movingDirection)
-        $(`.${this.className}${this.movingDirection}`).removeClass('item1')
-        $(`.${this.className}${this.movingDirection}`).removeClass('item2')
-        $(`.${this.className}${this.movingDirection}`).removeClass('coin')
+        let player = `${this.className}${this.movingDirection}`
+        let gunlessPlayer = `${this.classNameNoGun}${this.previousDirection}`
+        let playerWithGun =`${this.classNameGun}${this.previousDirection}`
+        this.checkDeath()
+        $(`.${player}`).removeClass('item1 item2 item3 coin')
         $(`.${this.className}Right`).removeClass(`${this.className}Right`)
         $(`.${this.className}Left`).removeClass(`${this.className}Left`)
-        $('.spaceManNoGunRight').removeClass('spaceManNoGunRight')
-        $('.spaceManNoGunLeft').removeClass('spaceManNoGunLeft')
-
-        grabSquare(this.x,this.y).addClass(`${this.className}${this.movingDirection}`)
+        $(`.${gunlessPlayer}`).removeClass(gunlessPlayer)
+        $(`.${playerWithGun}`).removeClass(playerWithGun)
+        grabSquare(this.x,this.y).addClass(player)
     }
+
     move(){
         if (this.alive){
-            if(this.direction === "left" && this.direction != this.previousDirection){
+            if(this.movingDirection != this.previousDirection){
+                this.previousDirection = this.direction
+                this.shootingDirection = this.direction
                 this.direction = null
-                this.previousDirection ="left"
             }
-            else if(this.direction === "right" && this.direction != this.previousDirection){
-                console.log("this.direction", this.direction)
-                console.log('hello')
-                console.log('this.prev', this.previousDirection)
-                this.direction = null
-                this.previousDirection ="right"
-            }
-            else if(this.direction=== "left" && grabSquare(this.x-1,this.y).is('.path, .ship')){
+            else if(this.direction=== "Left" && grabSquare(this.x-1,this.y).is(this.pathClasses)){
                 this.x--;
                 this.direction = null
             } 
-            else if (this.direction === "right" && grabSquare(this.x+1,this.y).is('.path, .ship')){
+            else if (this.direction === "Right" && grabSquare(this.x+1,this.y).is(this.pathClasses)){
                 this.x++;
                 this.checkWin()
                 this.direction = null
-            } else  if (this.direction=== "up" && grabSquare(this.x,this.y+1).is('.path, .ship')){
+            } else  if (this.direction=== "up" && grabSquare(this.x,this.y+1).is(this.pathClasses)){
                 this.y++;
                 this.direction = null
 
-            } else if (this.direction === "down" && grabSquare(this.x,this.y-1).is('.path, .ship')){
+            } else if (this.direction === "down" && grabSquare(this.x,this.y-1).is(this.pathClasses)){
+                this.checkWin()
                 this.y--
                 this.direction = null
+
             }
             this.render();
 
-            setTimeout(()=>{
-                this.move();
-                this.gatherItems()
-            },100)
+            this.timeout1 = setTimeout(()=>{ 
+                if(this.shooting === false){
+                    this.move();
+                    this.gatherItems()    
+                    this.render()
+                
+                } else if (this.shooting === true ) {
+                    setTimeout(() => {
+                        this.move();
+                        this.gatherItems()
+                        this.shooting = false    
+                    }, 500)
+                
+                }
+            },50)
         }
         this.squaresMoved = 0
     }
@@ -211,83 +267,153 @@ class Player {
         if (square.hasClass('coin')){
             this.points++
             $('#points').text(this.points)
-        } else if (square.hasClass('item1')){
+        } 
+        if (square.hasClass('item1')){
+            console.log('hasgun true gather items hit')
             $('.first').addClass('item1')
             this.itemsFound++
             this.points += 10
             this.hasGun = true
-            this.className = 'spaceManGun'
+            this.className = this.classNameGun
+
         } else if (square.hasClass('item2')){
             $('.second').addClass('item2')
             if(this.level === 1){
                 let levelOnePortal = new Item(11,1,'ship path')
+                // let levelOnePortal = new Item(2,10,'ship path') //Test Portal
             } else {
                 let levelTwoPortal = new Item(14,1,'ship path')
             }
             this.itemsFound++
             this.points+=15
+        } else if (square.hasClass('item3')){
+            this.itemsFound++
+            this.points + 15
+            $('.third').addClass('item3')
+
+
         }
     }
     shoot() {
         if(this.hasGun){
             this.direction = null
-            if (grabSquare(this.x,this.y).is('.spaceManGunLeft')) {      
+            this.direction = null
+            let shootName= (`${this.shootName}${this.shootingDirection}`)
+            let player = (`${this.className}${this.shootingDirection}`)
+
+                if (grabSquare(this.x,this.y).is($(`.${this.classNameGun}Left`))) {      
                 this.shootingDirection = 'Left'
-                let BlastFireLeft = new BlastFire(this.x, this.y,"blastFireLeft",175)
+                let BlastFireLeft = new BlastFire(this.x, this.y,"blastFireLeft",100)
             }
-            if (grabSquare(this.x,this.y).is('.spaceManGunRight')) {
+            if (grabSquare(this.x,this.y).is($(`.${this.classNameGun}Right`))) {
                 this.shootingDirection = 'Right'
-                let BlastFireRight = new BlastFire(this.x,this.y,"blastFireRight",175)
+                let BlastFireRight = new BlastFire(this.x,this.y,"blastFireRight",100)
             }
-            $(`.${this.className}${this.shootingDirection}`).addClass(`spaceShoot${this.shootingDirection}`)
-            $(`.spaceShoot${this.shootingDirection}`).removeClass(`${this.className}${this.shootingDirection}`)                    
+
+            $(`.${player}`).addClass(shootName)
+            $(`.${shootName}`).removeClass(player)                    
            
             setTimeout(()=>{
-                console.log("timeout hit")
-                $(`.spaceShoot${this.shootingDirection}`).addClass(`${this.className}${this.shootingDirection}`)    
-                $(`.spaceShoot${this.shootingDirection}`).removeClass(`spaceShoot${this.shootingDirection}`)
-           
+                $(`.${shootName}`).addClass(player)    
+                $(`.${shootName}`).removeClass(shootName)
+                this.shooting = false
             },500)
         }
         
     }
-    playerDies (){
-        $(`.${this.className}${this.movingDirection}`).removeClass(`${this.className}${this.movingDirection}`);
-        this.alive = false;
-        $(`.life${this.lives}`).removeClass('life')
+    checkDeath(){
+        if (grabSquare(this.x,this.y).hasClass('enemy')){
+            this.lostLife()
+        }
+    }
+    lostLife() {
         this.lives--
+        this.playerDies();
+        this.gameOver()
+    }
+    stats (){
+        console.log("This.x: ", this.x)
+        console.log("This.y: ", this.y)
+        console.log("Alive: ", this.alive)
+        console.log("Lives: ", this.lives)
+        console.log("Items Found: ", this.itemsFound)
+        console.log("Level: ", this.level)
+        console.log("Points: ", this.points)
+        console.log("Direction: ",this.direction)
+        console.log("Moving Direction: ", this.movingDirection)
+        console.log("Previous Direction: ", this.previousDirection )
+        console.log("Classname: ",this.className)
+        console.log("ClassNameGun: ", this.classNameGun)
+        console.log("ClassNameNoGun: ", this.classNameNoGun )
+        console.log("Enemies: ", this.enemies)
+        console.log("Has Gun: ", this.hasGun)
+        console.log('Enemy Kills:', this.killCount)
+        console.log("Was Killed: ", this.wasKilled)
+        console.log("Shoot Name: ", this.shootName)
+        console.log("Shooting: ", this.shooting)
+        console.log("Shooting Direction: " ,this.shootingDirection)
+
+        
+    }
+    playerDies (){
+        console.log('player dies')
+        let player = `${this.className}${this.movingDirection}`
+        let diedX = this.x
+        let diedY = this.y
+        this.alive = false;
         this.direction = null
+        this.wasKilled = true
+        $(`.${player}`).removeClass(player);
+        $(`.life${this.lives}`).removeClass('life')
         $('#lives').text(this.lives)
-        alert(`Be carefull! You only have ${this.lives} lives left!`)
+        $('.first').removeClass('item1')
+
         if (this.level === 1){
             this.x = 0
             this.y = 9
+            if(this.hasGun){
+                let lostItem = new Item(diedX,diedY,'item1')
+                this.lostGun = true
+            } else if (!this.lostGun){
+                let lostItem = new Item(1,1,'item1') // Player gun
+            } 
+            this.hasGun = false
+
         } else if (this.level === 2){
             this.x = 0
             this.y = 12
+            if(this.hasGun){
+                let lostItem = new Item(diedX,diedY,'item1') // Player Gun
+                this.lostGun = true
+            } else if (!this.lostGun) {
+                let lostItem = new Item(7,7,'item1') // Player Gun
+            }
+            this.hasGun = false 
         }
         this.regeneration();
     }
     regeneration(){
         this.direction = null
-        grabSquare(this.x,this.y).addClass(`${this.className}${this.movingDirection}`)
+        this.movingDirection = "Right"
         this.alive = true
+        console.log("Regeneration classname: ", this.className)
+        if(player.wasKilled === true){
+            this.className = this.classNameNoGun
+        }
+            grabSquare(this.x,this.y).addClass(`${this.className}${this.movingDirection}`).removeClass('.coin')
         this.render()
     }
     checkWin (){
         if(grabSquare(this.x,this.y).hasClass('ship')){
-            console.log('check win hit')
-            if ($('.first').hasClass('item1') && $('.second').hasClass('item2')){
-                // console.log('this.level', this.level)
+            if ($('.second').hasClass('item2')){
                 this.level += 1
                 this.gameBoard = gameBoardLevelTwo
-                // console.log("this.level",this.level)
                 $('#levelNumber').text(this.level)
                 alert(`${this.exitPhrase}`)
                 if(this.level === 2){
-                    nextLevel()
+                    gameFunctions.nextLevel()
                 } else if (this.level > 2){
-                    endGame()
+                    gameFunctions.endGame()
                     scoreBoard.score();
                 }
             } else {
@@ -302,43 +428,13 @@ class Player {
     gameOver (){
         if(this.lives === 0){
         alert("Game Over")
-        endGame();
+        gameFunctions.endGame();
         setTimeout(()=>{
             scoreBoard.score();
         },250)
         }
     }
 }
-let player = new Player(0,9,'spaceManNoGun','spaceManGun')
-
-$('body').on('keydown', function(e){
-    // console.log(typeof e.which);
-    switch(e.which){
-        case 37:
-        if(player.movingDirection === 'Right'){
-            player.previousDirection = "Right"
-        }
-        player.direction = "left";
-        player.movingDirection = 'Left'
-        break;
-        case 39:
-        if(player.movingDirection === 'Left'){
-            player.previousDirection = "Left"
-        }
-        player.direction ="right";
-        player.movingDirection = 'Right'
-        break;
-        case 38:
-        player.direction ="down";
-        break;
-        case 40:
-        player.direction = "up"
-        break;
-        case 32:
-        player.direction = null;
-        player.shoot()
-        }
-})
 
 class BlastFire {
     constructor(x,y,image,speed){
@@ -361,7 +457,6 @@ class BlastFire {
         clearInterval(this.interval2);
     }
     removeBlastFire(){
-        console.log('remove blast fire hit')
         grabSquare(this.x,this.y).removeClass(this.image)
     }
 
@@ -411,82 +506,99 @@ class Enemy{
         }, this.speed);
         this.interval2 = setInterval(()=>{ 
             this.checkKill();
-            // player.checkWin();
             this.checkDeath();
         }, 10);
         (player.enemies).push(this);
+        this.onTop = 'coin'
     }  
+
     render(){
-        grabSquare(this.x,this.y).addClass(this.image)
-        grabSquare(this.x,this.y).addClass('enemy')
-
-        // if (grabSquare(this.x,this.y).is('item1, item2, item3, item4')){
-        //     grabSquare(this.x,this.y).removeClass('item1 item2 item3 item4')
-
-        // }
+        let square = grabSquare(this.x,this.y)
+        this.removeEnemy();
+        square.addClass('enemy').removeClass('path')
+        square.addClass(this.image)
+        if (square.is('.item1')){
+            this.onTop = 'item1'
+            square.removeClass(this.onTop)
+        } else if (square.is('.item2')){
+            this.onTop = 'item2'
+            square.removeClass(this.onTop)
+        } else if (square.is('.item3')){
+            this.onTop = 'item3'
+            square.removeClass(this.onTop)
+        } else if (square.is('.coin')){
+            this.onTop = 'coin'
+            square.removeClass(this.onTop)
+        }
+    }
+    removeEnemy(){
+        grabSquare(this.x,this.y).removeClass(this.image)        
+        grabSquare(this.x,this.y).removeClass('enemy').addClass('path')
+        if (this.onTop) {
+            grabSquare(this.x,this.y).addClass(this.onTop)
+            this.onTop = ''
+        }
     }
     checkDeath (){
         if (grabSquare(this.x,this.y).hasClass('enemyHit')){
-            console.log('check death hit')
             this.removeEnemy();
             this.destroy();
+            if (grabSquare(this.x,this.y).hasClass('coin')){
+                this.onTop = 'coin'
+            }
+            $('.enemyHit').addClass('explosion').removeClass('coin enemyHit')
+            setTimeout(()=> {
+                console.log('explosion set timeout hit')
+
+                $('.explosion').removeClass('explosion').addClass(this.onTop)
+
+            },500)
             $('.enemyHit').removeClass('enemyHit')
             player.killCount++
             player.points += 10
             $('#points').text(player.points)
             $('#kills').text(player.killCount)
-
         }
     }
     checkKill (){
         if (grabSquare(this.x,this.y).hasClass(`${player.className}${player.movingDirection}`)){
-            player.playerDies();
-            player.gameOver();
+            player.lostLife()
         }
     }
     destroy() {
+        this.removeEnemy()
         clearInterval(this.interval1);
         clearInterval(this.interval2)
     }
     enemyMoves (){
     let randomNum = Math.floor(Math.random() * 4);
         if (randomNum === 0){
-            if (grabSquare(this.x-1,this.y).hasClass('enemy')){
-            }
-            else if (grabSquare(this.x-1,this.y).hasClass('path')){
+            if (grabSquare(this.x-1,this.y).hasClass('path')){
                 this.removeEnemy();
                 this.x--;
                 this.render()
-        }
-        } else if (randomNum === 1){
-            if (grabSquare(this.x+1,this.y).hasClass('enemy')){
             }
-            else if (grabSquare(this.x+1,this.y).hasClass('path')){
+        } else if (randomNum === 1){
+             if (grabSquare(this.x+1,this.y).hasClass('path')){
                 this.removeEnemy();
                 this.x++;
                 this.render();
-        }
-        } else if (randomNum === 2){
-            if(grabSquare(this.x,this.y+1).hasClass('enemy')){
             }
-            else if(grabSquare(this.x,this.y+1).hasClass('path')){
+        } else if (randomNum === 2){
+             if(grabSquare(this.x,this.y+1).hasClass('path')){
                 this.removeEnemy();
                 this.y++;
                 this.render();
-        }
-        } else if (randomNum === 3)
-            if(grabSquare(this.x,this.y-1).hasClass('enemyy')){
             }
-            else if(grabSquare(this.x,this.y-1).hasClass('path')){
+        } else if (randomNum === 3){
+            if(grabSquare(this.x,this.y-1).hasClass('path')){        
                 this.removeEnemy();
                 this.y--
                 this.render();
-        }   
-    }
-    removeEnemy(){
-        grabSquare(this.x,this.y).removeClass(this.image)        
-        grabSquare(this.x,this.y).removeClass('enemy')
-    }
+            }   
+        }
+    }   
+   
 }
 
 class Item {
@@ -500,69 +612,58 @@ class Item {
         grabSquare(this.x,this.y).removeClass(this.image)
     }
     render(){
-        grabSquare(this.x,this.y).removeClass('coin')
-        grabSquare(this.x,this.y).addClass(this.image)
+        grabSquare(this.x,this.y).removeClass('coin').addClass(this.image)
     }
 }
 
+const gameFunctions = {
+    reset () {
+        $('body').empty()
+        // gameBoard = gameBoardLevelOne,
+        player.lives = 3
+        player.level = 1
+        player.points = 0
+        player.direction =  null,
+        player.movingDirection = 'Right'
+        player.itemsFound = 0
+        player.x= 0
+        player.y= 9
+    },
+    readyPlayerOne (){
+        this.reset()
+        let gameLevelOne= new GameLevel(gameBoardLevelOne)
+        gameLevelOne.buildPage()    
+        player.render()
+        player.move()
 
-reset = () => {
-    $('body').empty()
-    // gameBoard = gameBoardLevelOne,
-    player.lives = 3
-    player.level = 1
-    player.points = 0
-    player.direction =  null,
-    player.movingDirection = 'Right'
-    player.itemsFound = 0
-    player.x= 0
-    player.y= 9
+    },
+    nextLevel (){
+        for(let i = 0; i < player.enemies.length; i++){
+            player.enemies[i].destroy();
+            // player.enemies[i].removeEnemy();
+        }
+        $('.maze').empty()
+        player.direction =  null,
+        player.itemsFound = 0
+        let gameLevelTwo = new GameLevel(gameBoardLevelTwo)
+        gameLevelTwo.generateMaze()
+        $('.square').css({'height': '4.5vh'}, {'width': '4.5vh'});
+        player.x = 0
+        player.y = 12
+        grabSquare(player.x,player.y).addClass(player.className)
+        $('.second').removeClass('item2')
+        gameLevelTwo.levelTwoItemsAndEnemies()
+    },
+    endGame(){
+        for(let i = 0; i < player.enemies.length; i++){
+            player.enemies[i].destroy();
+            // player.enemies[i].removeEnemy();
+        }
+        scoreBoard.playerScore = player.points
+        player.level = 1
+        $('body').empty()
+    }    
 }
-
-function readyPlayerOne (){
-    reset()
-    let gameLevelOne= new GameLevel(gameBoardLevelOne)
-    gameLevelOne.buildPage()    
-    player.render()
-    player.move()
-    
-    
-    // buildInfoBoard();     
-    // generateMaze();   
-    // levelOneGameAssets()
-}
-
-function nextLevel (){
-    for(let i = 0; i < player.enemies.length; i++){
-        player.enemies[i].destroy();
-        player.enemies[i].removeEnemy();
-    }
-    console.log('players.enemies', player.enemies)
-    $('.maze').empty()
-    player.direction =  null,
-    player.itemsFound = 0
-    let gameLevelTwo = new GameLevel(gameBoardLevelTwo)
-    gameLevelTwo.generateMaze()
-    $('.square').css({'height': '4.5vh'}, {'width': '4.5vh'});
-    player.x = 0
-    player.y = 12
-    player.regeneration()
-    $('.first').removeClass('item2')
-    $(`.${player.item}`).removeClass(`${player.item}`);
-    gameLevelTwo.levelTwoItemsAndEnemies()
-}
-
-function endGame(){
-    for(let i = 0; i < player.enemies.length; i++){
-        player.enemies[i].destroy();
-        player.enemies[i].removeEnemy();
-    }
-    scoreBoard.playerScore = player.points
-    player.level = 1
-    $('body').empty()
-}
-
-
 
 const scoreBoard = {
     playerScore: 0,
@@ -603,7 +704,6 @@ const scoreBoard = {
         const nameEnter = $('<div class=columnC id=nameEnter/>')
         $(board).append(highScore, theplayerScore, nameReg, name, nameEnter)
         $('.playerScore').text(this.playerScore)
-        console.log(this.playerScore,"this.playerscore")
     },
     buildNameBoxes (){
         for(let i = 0; i < 10; i++){
@@ -630,11 +730,9 @@ const scoreBoard = {
     },
        addNameScore (){
         this.highScoreArray.push(this.playerName)
-        console.log("highscosreayr", this.highScoreArray)
         for (let i = 0; i< this.highScoreArray.length; i++){
             if(this.highScoreArray[i].name === '' || this.playerScore > this.highScoreArray[4].score){
                 this.highScoreArray[5] =  {"name": this.playerName, "score": this.playerScore}
-                console.log('this.playerName', this.playerName)
                 break; 
             }
         }
@@ -681,7 +779,6 @@ const scoreBoard = {
         const sortedArray = this.highScoreArray.sort(function(a,b) {
             return b.score - a.score
         });
-        console.log(sortedArray[0].score)
         for(i=0; i<5; i++){
             $(`.score${i+1}`).text(sortedArray[i].score)
             $(`.name${i+1}`).text(sortedArray[i].name)
@@ -691,7 +788,7 @@ const scoreBoard = {
         const replay = $('<div class=replayButton>').text('REPLAY')
         $('.boardContainer').append(replay)
         replay.click(function(e) {
-            readyPlayerOne()
+            gameFunctions.readyPlayerOne()
         });
     },
     addEmptySpot (){
@@ -699,7 +796,7 @@ const scoreBoard = {
         $('.highScoreBoard').append(emptySpot)
     },
     score(){
-        endGame();
+        gameFunctions.endGame();
         this.buildScoreboard();
         this.buildNameBoxes();
         this.buildLetters();
@@ -711,4 +808,5 @@ const scoreBoard = {
     }
 }
 
-readyPlayerOne()
+let player = new Player(0,9,'spaceManNoGun','spaceManGun','spaceShoot')
+gameFunctions.readyPlayerOne()

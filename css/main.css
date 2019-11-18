@@ -4,7 +4,7 @@ body {
     font-family: 'Press Start 2P', cursive;
 }
 #mazeContainer {
-    background-image: url('../GameAssets/gameboyScreenLarge.png');
+    background-image: url('');
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: bottom;
@@ -39,7 +39,8 @@ body {
     font-size: 0;
     display: inline-block;
     border: 5px solid black;
-    margin-top: 12.5vh;    
+    margin-top: 9.5vh;
+   
 }
 h4 {
     margin: 0 auto;
@@ -86,13 +87,13 @@ width: 25%
 }
 */
 .square {
-    height: 4.7vh
+    height: 5vh
 }
 p {
     margin-top: 8%;
 }
 .maze div {
-    width:  5.23vh;
+    width:  6.23vh;
     margin: 0;
     padding: 0;
     display: inline-block;
@@ -105,6 +106,13 @@ p {
 .insideWall {
     background-image: url('../GameAssets/tileMetal2.png');
     background-size: contain;
+    background-position: center
+}
+.explosion {
+    background-image: url('../GameAssets/exploding4.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .coin {
     background-image: url('../GameAssets/coinSmall.gif');
@@ -147,36 +155,37 @@ p {
 } */
 
 .spaceManNoGunRight {
-    background-image: url('../GameAssets/spaceRightNoGun.gif');
+    background-image: url('../GameAssets/spaceRightNoGun2.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+} /* has no gun walking */
 .spaceManGunRight {
     background-image: url('../GameAssets/spaceWalkRight.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+}  /* has a gun walking */
 .spaceShootRight {
     background-image: url('../GameAssets/spaceShootRight.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+} /* stand and shoots  */
 
 .spaceManNoGunLeft {
-    background-image: url('../GameAssets/spaceLeftNoGun.gif');
+    background-image: url('../GameAssets/spaceLeftNoGun2.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+}  /* has no gun walking */
 .spaceManGunLeft {
     background-image: url('../GameAssets/spaceWalkLeft.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+}  /* has a gun walking */
+
 .spaceShootLeft {
     background-image: url('../GameAssets/spaceShootLeft.gif');
     background-size: contain;
     background-repeat: no-repeat;
-}
+} /* stand and shoots  */
 
 .alien {
     background-image: url('../GameAssets/alien.gif');
@@ -232,18 +241,27 @@ p {
     background-repeat: no-repeat;
     background-position: center;
 }
-.item2 {
+.item3 {  
+    /* energy Capsule */
+    background-image: url('../GameAssets/energyCapsule.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+} 
+.item2 { 
+    /* portal Key*/
     background-image: url('../GameAssets/portalKey.gif');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-}
+} 
 .item1 {
+    /* gun */
     background-image: url('../GameAssets/pixelGun.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-}
+} 
 
 .companion {
     background-image: url('../GameAssets/dalek2.gif');
@@ -390,4 +408,10 @@ p {
     margin-right: auto;
     margin-top: 1.5%;
     width: fit-content;
+}
+
+@media screen and (max-width: 700px ){
+    .maze{
+        min-width: 575px;
+    }
 }
